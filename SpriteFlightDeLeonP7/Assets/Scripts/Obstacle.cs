@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class Obstacle : MonoBehaviour
@@ -7,7 +8,8 @@ public class Obstacle : MonoBehaviour
     public float maxSize = 2.0f;
     public float minSpeed = 50f;
     public float maxSpeed = 150f;
-    
+    public GameObject impactFrame;
+
     Rigidbody2D rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,7 +22,7 @@ public class Obstacle : MonoBehaviour
         Vector2 randomDirection = Random.insideUnitCircle;
 
         float randomTorque = Random.Range(-maxSpinSpeed, maxSpinSpeed);
-        
+
 
         rb = GetComponent<Rigidbody2D>();
         rb.AddForce(randomDirection * randomSpeed);
@@ -30,6 +32,14 @@ public class Obstacle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Vector2 contactPoint = collision.GetContact(0).point;
+        GameObject spawnedObject = Instantiate(impactFrame, contactPoint, Quaternion.identity);
+
+        Destroy(spawnedObject, 1f);
     }
 }
